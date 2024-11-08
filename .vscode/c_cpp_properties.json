@@ -8,9 +8,9 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/include",
-                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/src",
-                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/.pio/libdeps/d1_mini_pro/ESP8266 Influxdb/src",
+                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/include",
+                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/src",
+                "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/.pio/libdeps/d1_mini_pro/ESP8266 Influxdb/src",
                 "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266HTTPClient/src",
                 "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
                 "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
@@ -58,9 +58,9 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/include",
-                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/src",
-                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/PlatformIO/Projects/ESP8266-infuxDB-04.04.2024/.pio/libdeps/d1_mini_pro/ESP8266 Influxdb/src",
+                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/include",
+                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/src",
+                    "c:/Users/Monitoring/OneDrive - Pillipp Haustechnik GmbH/Dokumente/GitHub/ESP8266-infuxDB/.pio/libdeps/d1_mini_pro/ESP8266 Influxdb/src",
                     "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266HTTPClient/src",
                     "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
                     "C:/Users/Monitoring/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
@@ -107,7 +107,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60115",
+                "PLATFORMIO=60116",
                 "ESP8266",
                 "ARDUINO_ARCH_ESP8266",
                 "ARDUINO_ESP8266_WEMOS_D1MINIPRO",

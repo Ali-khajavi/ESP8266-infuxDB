@@ -86,8 +86,6 @@ void setup() {
     pulse1Sec = pulseCount;
   }
 
-
-
   Serial.begin(115200);
 
   //flow_Rate = calculationFlow(pulseCount);
