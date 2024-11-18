@@ -16,85 +16,81 @@
 #define INFLUXDB_TOKEN "QDp-QDPqKbNbVPjESvLcj7ons1LzjD9AUiEkYs_s5Nc8yRtTiiysH8eITv4hHqC87o7W7pT2_VW-B28MLb-QXQ=="
 #define INFLUXDB_ORG "ec44f19893e990b6"
 #define INFLUXDB_BUCKET "Sensors"
-#define DEVICE "2024" 
+#define DEVICE "2024"
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
 Point sensor("Jürgen Pillipp");
 ESP8266WiFiMulti wifi_multi;
 
-const uint16_t CONNECT_TIMEOUT = 5000;
-volatile unsigned int pulseCount = 0;
-
-const float CONVERSION_FACTOR = 0.45;
-const float ACCURACY_FACTOR = 0.03;
+volatile unsigned int pulseCount = 0; // Count of pulses from the sensor
+const float CONVERSION_FACTOR = 0.45; // Flow sensor conversion factor
 
 void IRAM_ATTR pulseCounter() {
     pulseCount++;
 }
 
-float calculateFlowRate(unsigned long frequency) {
-    float maxFlow = (frequency * (1 + ACCURACY_FACTOR)) / CONVERSION_FACTOR;
-    float minFlow = (frequency * (1 - ACCURACY_FACTOR)) / CONVERSION_FACTOR;
-    return (maxFlow + minFlow) / 2.0;
-}
-
 void setup() {
     Serial.begin(115200);
-    pinMode(10, OUTPUT); 
-    digitalWrite(10, HIGH); // Power Up The Sensor
 
-    pinMode(D1, INPUT);  // Read sensor channel 1 data
-    attachInterrupt(digitalPinToInterrupt(D1), pulseCounter, RISING); // Set intrupt Registery active to be able to count digital puls.
+    // Power up the sensor
+    pinMode(10, OUTPUT);
+    digitalWrite(10, HIGH);
 
-    pulseCount = 0;  // Reset pulse count
-    unsigned long startMillis = millis();
+    // Configure flow sensor pin and interrupt
+    pinMode(D1, INPUT);
+    attachInterrupt(digitalPinToInterrupt(D1), pulseCounter, RISING);
 
-    // Count pulses for exactly 2 seconds
-    while (millis() - startMillis < 2000) {
-        // Waiting 2 seconds while counting pulses in the interrupt
+    // Variables for flow rate calculation
+    unsigned int totalPulseCount = 0;
+    const unsigned int measurementDuration = 3000; // 3 seconds
+    const unsigned int intervals = 3; // Break into smaller intervals for averaging
+
+    Serial.println("Measuring flow rate...");
+    for (unsigned int i = 0; i < intervals; i++) {
+        pulseCount = 0;
+        delay(measurementDuration / intervals);
+        totalPulseCount += pulseCount;
     }
 
-    // Calculate frequency from pulse count over 2-second interval
-    float frequency = pulseCount / 2.0;
-    float flowRate = calculateFlowRate(frequency);
+    // Calculate the average frequency (Hz) and flow rate (L/min)
+    float averageFrequency = totalPulseCount / (measurementDuration / 1000.0); // Pulses per second
+    float flowRate = averageFrequency / CONVERSION_FACTOR; // Flow rate in L/min
 
+    Serial.print("Average Frequency (Hz): ");
+    Serial.println(averageFrequency);
+    Serial.print("Flow Rate (L/min): ");
+    Serial.println(flowRate);
+
+    // Connect to WiFi
     Serial.println("Connecting to WiFi...");
     wifi_multi.addAP(WIFI_SSID0, WIFI_PASSWORD0);
     wifi_multi.addAP(WIFI_SSID, WIFI_PASSWORD);
     wifi_multi.addAP(WIFI_SSID1, WIFI_PASSWORD1);
 
-    while (wifi_multi.run(CONNECT_TIMEOUT) != WL_CONNECTED) {
+    while (wifi_multi.run() != WL_CONNECTED) {
         Serial.print(".");
         delay(500);
     }
 
-    if (WiFi.status() == WL_CONNECTED) {
-        Serial.print("Connected to WiFi: ");
-        Serial.println(WiFi.SSID());
+    Serial.println("\nConnected to WiFi!");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
 
-        // Send flow rate to InfluxDB
-        sensor.addTag("DEVICE", DEVICE);
-        sensor.addField("flow", flowRate);
-        client.writePoint(sensor);
-        
-        Serial.print("Flow rate: ");
-        Serial.println(flowRate);
-        if (client.writePoint(sensor)) {
-          Serial.println("Data successfully sent to InfluxDB");
-        }
-        else {
+    // Send data to InfluxDB
+    sensor.addTag("DEVICE", DEVICE);
+    sensor.addField("flow", flowRate);
+
+    if (client.writePoint(sensor)) {
+        Serial.println("Data successfully sent to InfluxDB.");
+    } else {
         Serial.print("InfluxDB write failed: ");
         Serial.println(client.getLastErrorMessage());
-        }
-      } 
-      else {
-        Serial.println("WiFi connection failed!");
-      }
+    }
 
-    // Power down sensor, disable WiFi, and put ESP to sleep
+    // Power down the sensor, disable WiFi, and enter deep sleep
     digitalWrite(10, LOW);
     WiFi.mode(WIFI_OFF);
-    ESP.deepSleep(30e6);
+    ESP.deepSleep(30e6); // Deep sleep for 30 seconds (30e6 µs)
 }
 
 void loop() {
