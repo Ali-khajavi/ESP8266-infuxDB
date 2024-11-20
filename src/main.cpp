@@ -16,7 +16,7 @@
 #define INFLUXDB_TOKEN "QDp-QDPqKbNbVPjESvLcj7ons1LzjD9AUiEkYs_s5Nc8yRtTiiysH8eITv4hHqC87o7W7pT2_VW-B28MLb-QXQ=="
 #define INFLUXDB_ORG "ec44f19893e990b6"
 #define INFLUXDB_BUCKET "Sensors"
-#define DEVICE "2024"
+#define DEVICE "2022"
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
 Point sensor("Jürgen Pillipp");
